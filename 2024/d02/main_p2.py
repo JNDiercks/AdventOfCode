@@ -44,7 +44,6 @@ with open(filePath, 'r') as f:
   data = data.split('\n')
   data = [d for d in data if len(d) > 0]
 
-  isValid = True 
   safeReportCount = 0
   for l in data:
     values = re.split(r"\s+", l)
