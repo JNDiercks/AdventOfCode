@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 
+namespace AdventOfCode.Y2024;
+
 public class Day18 : ISolver
 {
     public object? PartOne(string input, bool test)

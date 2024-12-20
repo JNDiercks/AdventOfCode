@@ -1,4 +1,5 @@
-﻿public class Day19 : ISolver
+﻿namespace AdventOfCode.Y2024;
+public class Day19 : ISolver
 {
     static Dictionary<string, ulong> designCountCache = [];
     static Dictionary<string, ulong>.AlternateLookup<ReadOnlySpan<char>> cacheLookup = designCountCache.GetAlternateLookup<ReadOnlySpan<char>>();

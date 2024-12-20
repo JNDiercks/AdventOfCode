@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 
+namespace AdventOfCode.Y2024;
 public class Day17 : ISolver
 {
     public object PartOne(string input, bool test)
