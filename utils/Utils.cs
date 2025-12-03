@@ -10,4 +10,7 @@ public static class Utils {
     public static void Print(int input) {
         Console.WriteLine(input);
     }
+    public static void Print<T>(T[] array, string seperator = "") {
+        Console.WriteLine(string.Join(seperator, array));
+    }
 }

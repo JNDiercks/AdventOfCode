@@ -27,7 +27,6 @@ public class Day20 : ISolver
 
     public IEnumerable<Complex> GetPassThroughPositon(Dictionary<Complex, int> map, Complex position)
     {
-        Utils.Print(position.ToString());
         foreach (var direction in directions)
         {
             // If next position is not a wall, we can ignore it

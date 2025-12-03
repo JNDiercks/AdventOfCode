@@ -43,49 +43,52 @@ public class Day23 : ISolver
     public object PartTwo(string input, bool test)
     {
         var parsedInput = input.Split("\n");
-        var computers = parsedInput.Select(x => x.Split("-")).SelectMany(x => x).ToHashSet();
-        var networkConnections = parsedInput.Select(GetNetworkConnection);
+        // var computers = parsedInput.Select(x => x.Split("-")).SelectMany(x => x).ToHashSet();
+        var networkConnections = new Dictionary<string, List<string>>();
+        foreach (var line in parsedInput)
+        {
+            var parts = line.Split('-');
+            if (networkConnections.TryGetValue(parts[0], out _)) {
+                networkConnections[parts[0]].Add(parts[1]);
+
+            } else {
+                networkConnections[parts[0]] = [parts[1]];
+            }
+
+            if (networkConnections.TryGetValue(parts[1], out _)) {
+                networkConnections[parts[1]].Add(parts[0]);
+                
+            } else {
+                networkConnections[parts[1]] = [parts[0]];
+            }
+        } 
 
         List<List<string>> cliques = [];
-        foreach (var c in computers)
-        {
-            Utils.Print("Connection: " + networkConnections.Count(x => x.ConnectsTo(c)));
-            var connectsTo = networkConnections.Where(x => x.ConnectsTo(c)).Select(x => x.GetConnectsTo(c)).ToList();
-            var triangle = (from c1 in connectsTo
-                            from c2 in connectsTo
-                            where c1 != c2
-                            select networkConnections.Where(x => x.Connects(c1, c2))).SelectMany(x => x).Distinct().ToList();
 
-            foreach (var t in triangle)
+        string[] maxNetwork = [];
+        var computers = networkConnections.Keys.Order().ToImmutableSortedSet();
+        void Visit(string[] network)
+        {
+            // Check if max complete network
+            if (network.Length > maxNetwork.Length)
             {
-                (var t1, var t2) = t.GetConnections();
-                cliques.Add([c, t1, t2]);
+                maxNetwork = network;
             }
-        }
-        Utils.Print("Cliques size : " + cliques.Count + " max: " + cliques.MaxBy(x => x.Count).Count);
-        var j = 0;
-        foreach (var computer in computers)
-        {
-            Utils.Print(j++);
-            for (var i = 0; i < cliques.Count; i++ )
+            // Recurse
+            var tails = (network.Length == 0) ? computers : computers.SkipWhile(c => c.CompareTo(network.Last()) <= 0).ToImmutableSortedSet();
+            foreach (var computer in tails)
             {
-                if (cliques[i].Contains(computer)) continue;
-                if (cliques[i].Count == 13) {
-                    Utils.Print(string.Join(",", cliques.MaxBy(x => x.Count).OrderBy(x => x).ToArray()));
-                    continue;
-                }
-
-
-                if (cliques[i].All(x => networkConnections.Contains(new NetworkConnection(x, computer))))
+                if (network.All(c => networkConnections[c].Contains(computer)))
                 {
-                    cliques[i] = [.. cliques[i], computer];
+                    string[] newNetwork = [.. network, computer];
+                    Visit(newNetwork);
                 }
             }
         }
-        // Utils.Print(IsConnectedToAll("de", ["ta", "co", "as"], networkConnections).ToString());
-
-        Utils.Print(string.Join(",", cliques.MaxBy(x => x.Count).OrderBy(x => x).ToArray()));
-        return cliques.MaxBy(x => x.Count).Count!;
+        Visit([]);
+        // Utils.Print(string.Join(",", cliques.MaxBy(x => x.Count).OrderBy(x => x).ToArray()));
+        Utils.Print(string.Join(",", maxNetwork));
+        return maxNetwork.Count();
     }
 
     private bool IsConnectedToAll(string computer, IEnumerable<string> computers, IEnumerable<NetworkConnection> networkConnections)

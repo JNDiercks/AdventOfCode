@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    
+        
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${fileDirname}"
+        },
+        {
+            "name": "C#: aoc-d17",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/2024/d17/aoc-d17/aoc-d17.csproj",
+            "launchConfigurationId": "TargetFramework=;aoc-d17",
+        }
+    ]
+}
